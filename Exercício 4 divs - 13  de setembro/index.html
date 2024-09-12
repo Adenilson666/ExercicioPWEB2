@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizando Várias Seções com Fetch API</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2{
+            color: black;
+            font-family: Arial, sans-serif;
+        }
+
+        .section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background-color: white;
+        }
+        </style>
+</head>
+<body>
+
+    <h1>Requisições Simultâneas com Fetch API</h1>
+
+    <div id="section1" class="section">
+        <h2>Preço do Bitcoin</h2>
+        <p class="loading">Aguarde, carregando dados...</p>
+        <script>
+            fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('section1').innerHTML = `
+                        <h2>Preço do Bitcoin</h2>
+                        <p>Preço atual em USD: ${data.bpi.USD.rate}</p>
+                        <p>Preço atual em EUR: ${data.bpi.EUR.rate}</p>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('section1').innerHTML = '<p>Erro ao carregar os dados.</p>';
+                });
+        </script>
+    </div>
+
+    <!-- Seção 2: Atualizada com uma API pública -->
+    <div id="section2" class="section">
+        <h2>Informações sobre 5 Países</h2>
+        <p class="loading">Aguarde, carregando dados...</p>
+        <script>
+            fetch('https://restcountries.com/v3.1/all')
+                .then(response => response.json())
+                .then(data => {
+                    // Limita a 5 países
+                    const countries = data.slice(0, 5);
+
+                    const countryList = countries.map(country => `
+                        <div class="country-card">
+                            <h3>${country.name.common}</h3>
+                            <p><strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'}</p>
+                            <p><strong>População:</strong> ${country.population.toLocaleString()}</p>
+                            <p><strong>Região:</strong> ${country.region}</p>
+                            <p><strong>Sub-região:</strong> ${country.subregion}</p><br>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('section2').innerHTML = `
+                        <h2>Informações sobre 5 Países</h2>
+                        ${countryList}
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('section2').innerHTML = '<p>Erro ao carregar os dados dos países.</p>';
+                });
+        </script>
+    </div>
+
+    <!-- Seção 3: Atualizada com uma API pública -->
+    <div id="section3" class="section">
+        <h2>Fato Aleatório</h2>
+        <p class="loading">Aguarde, carregando dados...</p>
+        <script>
+            fetch('https://uselessfacts.jsph.pl/random.json?language=en')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('section3').innerHTML = `
+                        <h2>Fato Aleatório</h2>
+                        <p>${data.text}</p>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('section3').innerHTML = '<p>Erro ao carregar o fato aleatório.</p>';
+                });
+        </script>
+    </div>
+
+    <!-- Seção 4: Atualizada com uma API pública -->
+    <div id="section4" class="section">
+        <h2>Perfis Aleatórios de Usuários</h2>
+        <p class="loading">Aguarde, carregando dados...</p>
+        <script>
+            fetch('https://randomuser.me/api/?results=5')
+                .then(response => response.json())
+                .then(data => {
+                    const users = data.results;
+                    const userList = users.map(user => `
+                        <div class="user-card">
+                            <div class="user-info">
+                                <p><strong>Nome:</strong> ${user.name.first} ${user.name.last}</p>
+                                <p><strong>Email:</strong> ${user.email}</p>
+                                <p><strong>País:</strong> ${user.location.country}</p><br>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('section4').innerHTML = `
+                        <h2>Perfis Aleatórios de Usuários</h2>
+                        ${userList}
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('section4').innerHTML = '<p>Erro ao carregar os dados.</p>';
+                });
+        </script>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
